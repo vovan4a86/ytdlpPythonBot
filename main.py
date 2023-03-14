@@ -64,6 +64,7 @@ async def echo(message: types.Message):
                 logging.info('Start downloading: {} ({})'.format(message.text, meta['title']))
                 error_code = ydl.download(message.text)
                 logging.info('Downloading done!')
+                await message.answer('Файл скачен, идет обработка...')
 
             except:
                 logging.error('Error downloading file! Error: '.format(error_code))
