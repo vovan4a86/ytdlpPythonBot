@@ -13,7 +13,7 @@ def remove_spec_chars(name):
 
 
 def rename_file(old_name, new_name):
-    file_list = os.listdir('output')
+    file_list = os.listdir(OUTPUT_DIR)
     pattern = "*.mp3"
     for entry in file_list:
         if fnmatch.fnmatch(entry, pattern) and entry.startswith(old_name):
@@ -75,9 +75,15 @@ async def echo(message: types.Message):
             await message.answer('К сожалению, возникла ошибка!')
             logging.error('Error downloading file! Code: {}'.format(error_code))
         else:
-            await bot.send_message(message.from_user.id,
-                                   'Файл успешно загружен => ' + '[СКАЧАТЬ](' + HOST + new_name + '.mp3)',
-                                   parse_mode='Markdown')
+            # await bot.send_message(message.from_user.id,
+            #                        'Файл успешно загружен => ' + '[СКАЧАТЬ](' + HOST + new_name + '.mp3)',
+            #                        parse_mode='Markdown')
+            try:
+                await bot.send_audio(message.chat.id, audio=open(OUTPUT_DIR + new_name + '.mp3', 'rb'))
+            except:
+                await message.answer('Ошибка при отдаче файла!')
+            os.remove(OUTPUT_DIR + new_name + '.mp3')
+
     else:
         await message.answer('Нужна YT ссылка!')
 
